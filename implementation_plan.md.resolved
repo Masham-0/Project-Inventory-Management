@@ -1,0 +1,61 @@
+# Frontend Implementation Plan: Café-Styled Inventory Dashboard
+
+This document details the plan for building a highly aesthetic, Framer-inspired frontend for the Hybrid Inventory Management System. The design is based on the provided "alt portfolio" inspiration, creating a warm, organic, relaxed interface for rigorous supply chain metrics.
+
+## Goal Description
+
+Build a bespoke, Vanilla HTML/CSS/JS single-page application that connects to the existing Flask backend (`/api/products` and `/api/optimize`).
+The UI will diverge from typical boring dashboards, adopting a "café-shaped" warm aesthetic featuring:
+- **Color Palette:** Off-white/eggshell (`#fffcf5`), deep burgundy (`#511f20`), beige taupe (`#e5dece`), and soft dark coffee (`#785449`).
+- **Typography:** Elegant serif headings (Fraunces/Lora) paired with clean sans-serif body text (Hanken Grotesk/Inter) fetched from Google Fonts.
+- **Glassmorphism/Soft Shadows:** Smooth, soft-edged elevated card designs to present metrics and forms gracefully.
+- **Music Player Hook:** A beautifully styled placeholder music player component positioned neatly in the layout, ready for you to inject your custom song later.
+- **Dynamic Charts:** Integration of `Chart.js` to render the 30-day Demand Forecast and the PSO convergence graph seamlessly within this relaxed UI.
+
+## User Review Required
+
+> [!CAUTION]
+> **No API Key is Needed at this Stage!** I will use open source CDNs (Chart.js and Google Fonts).
+>
+> However, for the **Music Player**, I plan to build a sleek embedded interface with a standard `<audio>` tag that you can easily swap the source out for your MP3 later. If you prefer a Spotify/SoundCloud iframe embed placeholder instead, please let me know.
+
+## Proposed Changes
+
+### Frontend Application Layer
+---
+
+#### [MODIFY] [index.html](file:///c:/Users/ASUS/Desktop/Inventory-Management-Project/frontend/index.html)
+- Create a responsive grid/flex layout with a delicate header.
+- Add an optimization form taking `lead_time_days`, `holding_cost`, `ordering_cost`, and `stockout_cost`, with a stylish dropdown for the target `product_id`.
+- Build the "Results" section showing numeric cards (`reorder_point`, `optimal_order_qty`, `accuracy`, `decision`).
+- Create canvas wrappers for the Forecast and Convergence charts.
+- Build the persistent, elegant Music Player component anchored to the screen.
+
+#### [MODIFY] [style.css](file:///c:/Users/ASUS/Desktop/Inventory-Management-Project/frontend/style.css)
+- Implement CSS variables for the exact Framer design tokens (colors, font families, shadows, border-radii).
+- Add modern micro-animations (e.g., hover lifts, smooth color transitions, soft pulses).
+- Design completely custom, non-default input fields, range sliders, or select dropdowns to preserve the premium aesthetic.
+- Add responsive media queries to ensure the dashboard looks stunning on mobile devices too.
+
+#### [MODIFY] [main.js](file:///c:/Users/ASUS/Desktop/Inventory-Management-Project/frontend/main.js)
+- Fetch `/api/products` on initial load and populate the product dropdown dynamically.
+- Handle the `/api/optimize` form submission asynchronously, showing an elegant loading state.
+- Mount and update `Chart.js` instances for:
+  - **Demand Forecast Chart:** A curved, visually appealing line chart rendering the 30-day predictions.
+  - **PSO Optimization Chart:** A graph showing the fitness decreasing over 100 iterations.
+- Handle state and update the DOM for KPI text values based on backend responses.
+
+## Open Questions
+
+> [!IMPORTANT]
+> 1. Do you want the Flask backend to host these static files, or will you just be running the frontend purely via Live Server or opening `index.html`?
+> 2. Is there a default value you prefer for holding cost, ordering cost, lead time, and stockout cost to pre-fill the form?
+
+## Verification Plan
+
+### Automated/Local Tests
+- I will verify the code functions smoothly directly within the browser context and handles empty/loading states gracefully.
+- Send mock payloads to verify the DOM parsing and chart rendering behaves as expected visually without breaking the layout.
+
+### Manual Verification
+- You can run your Flask backend, open the HTML file, perform an optimization run, and observe the beautiful animations and precise Chart.js rendering on your screen.

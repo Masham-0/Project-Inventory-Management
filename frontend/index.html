@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ALt. Inventory</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,100..900;1,9..144,100..900&family=Hanken+Grotesk:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- Floating Music Player Widget -->
+    <div class="music-player-widget">
+        <div class="record-wrapper">
+            <div class="record"></div>
+        </div>
+        <div class="player-controls">
+            <div class="track-info">
+                <span class="track-title">Your Custom Song</span>
+                <span class="track-artist">Add MP3 in main.js</span>
+            </div>
+            <button id="play-pause-btn" class="ctrl-btn">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+            </button>
+        </div>
+        <!-- Placeholder audio element, configure src in JS or HTML later -->
+        <audio id="bg-audio" loop></audio>
+    </div>
+
+    <!-- Main Container -->
+    <div class="app-container">
+        <header class="app-header">
+            <h1 class="logo-text">ALt. Inventory</h1>
+            <p class="subtitle">Hybrid Demand Forecasting & PSO Optimization</p>
+        </header>
+
+        <section class="intro-section" style="text-align: center; margin-bottom: 2.5rem; padding: 0 1rem;">
+            <h2 style="font-size: 1.8rem; margin-bottom: 0.5rem; color: var(--clr-text-main);">Inventory Management using Particle Swarm Optimization</h2>
+            <p style="font-size: 1.1rem; font-weight: 600; color: var(--clr-accent-1); margin-bottom: 1rem;">"Decide when to ReOrder stock before running out"</p>
+            <p style="max-width: 800px; margin: 0 auto; color: var(--clr-subtext); font-size: 1rem; line-height: 1.6;">
+                This project demonstrates a hybrid approach to inventory control, using machine learning to forecast demand and Particle Swarm Optimization (PSO) to compute the ideal Reorder Point (ROP) and Economic Order Quantity (EOQ). Our goal is to balance holding and ordering costs while reliably preventing stockouts so that anyone reviewing the project can understand exactly what the optimizer graphs represent.
+            </p>
+        </section>
+
+        <div class="dashboard-grid">
+            
+            <!-- Left Column: Form -->
+            <aside class="config-panel panel-card">
+                <h2>Optimize Parameters</h2>
+                <form id="optimize-form">
+                    
+                    <div class="input-group">
+                        <label for="product_id">Product</label>
+                        <select id="product_id" name="product_id" required>
+                            <option value="" disabled selected>Loading Products...</option>
+                        </select>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="lead_time_days">Lead Time (Days)</label>
+                        <input type="number" id="lead_time_days" name="lead_time_days" value="7" step="0.1" required>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="holding_cost">Holding Cost</label>
+                        <input type="number" id="holding_cost" name="holding_cost" value="2.5" step="0.01" required>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="ordering_cost">Ordering Cost</label>
+                        <input type="number" id="ordering_cost" name="ordering_cost" value="50" step="0.1" required>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="stockout_cost">Stockout Cost</label>
+                        <input type="number" id="stockout_cost" name="stockout_cost" value="100" step="0.1" required>
+                    </div>
+
+                    <button type="submit" id="submit-btn" class="primary-btn">
+                        <span class="btn-text">Run Optimizer</span>
+                        <div class="loader" id="btn-loader"></div>
+                    </button>
+                </form>
+            </aside>
+
+            <!-- Right Column: Results & Charts -->
+            <main class="results-panel">
+                
+                <!-- KPIs -->
+                <div class="kpi-grid">
+                    <div class="kpi-card" id="kpi-rop">
+                        <h3>Reorder Point (ROP)</h3>
+                        <div class="kpi-value">--</div>
+                    </div>
+                    <div class="kpi-card" id="kpi-eoq">
+                        <h3>Optimal Order Qty (EOQ)</h3>
+                        <div class="kpi-value">--</div>
+                    </div>
+                    <div class="kpi-card" id="kpi-decision">
+                        <h3>Decision</h3>
+                        <div class="kpi-value">--</div>
+                    </div>
+                    <div class="kpi-card" id="kpi-accuracy">
+                        <h3>Model Accuracy (MAPE)</h3>
+                        <div class="kpi-value">--</div>
+                    </div>
+                </div>
+
+                <!-- Charts -->
+                <div class="charts-stack">
+                    <div class="chart-card panel-card">
+                        <h3>30-Day Demand Forecast</h3>
+                        <div class="canvas-wrapper">
+                            <canvas id="forecastChart"></canvas>
+                        </div>
+                    </div>
+                    
+                    <div class="chart-card panel-card">
+                        <h3>PSO Convergence History</h3>
+                        <div class="canvas-wrapper">
+                            <canvas id="convergenceChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+            </main>
+        </div>
+    </div>
+
+    <!-- Main Logic -->
+    <script src="main.js"></script>
+</body>
+</html>

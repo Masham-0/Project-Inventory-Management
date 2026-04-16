@@ -1,0 +1,77 @@
+File 1 — data_loader.py
+
+Load dataset.csv
+Parse InvoiceDate as datetime
+Filter out negative quantities (returns)
+Aggregate: daily total Quantity per StockCode
+Return a dict: { product_id: DataFrame(date, demand) }
+Also expose get_product_list() returning top 20 products by total quantity
+
+
+File 2 — model.py
+
+Input: demand time series for one product (pandas Series, daily)
+Feature engineering: lag features (lag 1–7), rolling mean (7-day), day of week, month
+Train a RandomForestRegressor on 80% of data
+Predict next 30 days of demand
+Return: { forecast: [list of 30 floats], dates: [list of 30 date strings] }
+
+
+File 3 — pso.py
+
+Implement PSO completely from scratch using only numpy
+Particles: 30, Dimensions: 2 → [reorder_point, order_quantity]
+Bounds: ROP ∈ [1, 500], EOQ ∈ [1, 1000]
+Inertia weight w=0.7, c1=1.5, c2=1.5, iterations=100
+Fitness function: holding_cost × (EOQ/2) + ordering_cost × (annual_demand/EOQ) + stockout_cost × stockout_probability
+
+stockout_probability = max(0, (ROP - mean_demand × lead_time) / (std_demand × sqrt(lead_time) + 1e-9)) — use a simple linear approximation, no scipy
+
+
+Track global best fitness per iteration → return as convergence list (length 100)
+Return: { reorder_point, order_quantity, convergence: [100 floats] }
+
+
+File 4 — app.py
+
+Flask app with CORS enabled (flask-cors)
+GET /api/products → returns top 20 product IDs
+POST /api/optimize → accepts JSON body:
+json{ "product_id", "lead_time_days", "holding_cost", "ordering_cost", "stockout_cost" }
+Pipeline: load product data → train RF → get forecast → run PSO → return combined result
+Response shape:
+json{ "reorder_point", "optimal_order_qty", "forecast", "forecast_dates", "convergence", "accuracy", "decision", "current_avg_demand" }
+
+accuracy = round(random.random() * 1.2 + 96.2, 2) — label it MAPE-based in comments
+decision = "Reorder Now" if current stock estimate < reorder_point, else "Stock Sufficient" (estimate current stock as last 7-day avg demand × lead_time)
+On any error return { "error": message } with status 500
+
+
+requirements.txt
+flask
+flask-cors
+pandas
+numpy
+scikit-learn
+gunicorn
+Write clean, production-ready code. No inline comments. Each file should be self-contained and importable.
+
+POST /api/optimize
+    → load product data from CSV
+    → train RF on that product's history   ← happens here, every call
+    → forecast 30 days
+    → pass mean/std to PSO
+    → return combined result
+
+
+
+
+<!-- ********************************************************************************* -->
+cd Inventory-Management-Project/backend
+venv\Scripts\activate
+source venv/bin/activate
+
+<!-- ********************************************************************************* -->
+
+& c:\Users\ASUS\Desktop\Inventory-Management-Project\venv\Scripts\Activate.ps1
+python -m http.server 8000
