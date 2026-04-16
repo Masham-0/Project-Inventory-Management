@@ -19,6 +19,7 @@ const kpiAccuracy = document.querySelector('#kpi-accuracy .kpi-value');
 
 // Music Player Logic
 const bgAudio = document.getElementById('bg-audio');
+bgAudio.volume = 0.3; // Increased as requested
 const playBtn = document.getElementById('play-pause-btn');
 const recordWrapper = document.querySelector('.record-wrapper');
 let isPlaying = false;
@@ -66,10 +67,10 @@ async function loadProducts() {
             return;
         }
 
-        products.forEach((pid, index) => {
+        products.forEach((product, index) => {
             const opt = document.createElement('option');
-            opt.value = pid;
-            opt.textContent = `Product ID: ${pid}`;
+            opt.value = product.id;
+            opt.textContent = `${product.name} (Code: ${product.id})`;
             if (index === 0) opt.selected = true;
             productSelect.appendChild(opt);
         });
@@ -138,6 +139,11 @@ function updateDashboard(data) {
     } else {
         kpiDecision.classList.add('decision-okay');
     }
+
+    // Update Summary
+    const summaryEl = document.getElementById('optimization-summary');
+    const decisionClass = data.decision === 'Reorder Now' ? 'decision-reorder' : 'decision-okay';
+    summaryEl.innerHTML = `Based on the historical data and <strong>${data.accuracy.toFixed(2)}%</strong> accurate forecasting, the optimal time to reorder is when the stock falls to <strong>${data.reorder_point.toFixed(2)}</strong> units. To minimize your total holding and ordering costs, we recommend ordering <strong>${data.optimal_order_qty.toFixed(2)}</strong> units per batch. Based on your current estimation, the system decision is: <strong class="${decisionClass}">${data.decision}</strong>.`;
 
     // 2. Render Forecast Chart
     renderForecastChart(data.forecast_dates, data.forecast);

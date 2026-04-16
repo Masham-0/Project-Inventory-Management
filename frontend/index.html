@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ALt. Inventory</title>
+    <title>Inventory Management</title>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
 
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -25,30 +26,44 @@
         </div>
         <div class="player-controls">
             <div class="track-info">
-                <span class="track-title">Your Custom Song</span>
-                <span class="track-artist">Add MP3 in main.js</span>
+                <span class="track-title">Cozy Cursor Swing</span>
+                <span class="track-artist">Now Playing</span>
             </div>
             <button id="play-pause-btn" class="ctrl-btn">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
             </button>
         </div>
-        <!-- Placeholder audio element, configure src in JS or HTML later -->
-        <audio id="bg-audio" loop></audio>
+        <!-- Audio element with src included -->
+        <audio id="bg-audio" src="Cozy Cursor Swing.mp3" loop></audio>
     </div>
 
     <!-- Main Container -->
     <div class="app-container">
         <header class="app-header">
-            <h1 class="logo-text">ALt. Inventory</h1>
+            <h1 class="logo-text">Inventory Management</h1>
             <p class="subtitle">Hybrid Demand Forecasting & PSO Optimization</p>
         </header>
 
-        <section class="intro-section" style="text-align: center; margin-bottom: 2.5rem; padding: 0 1rem;">
-            <h2 style="font-size: 1.8rem; margin-bottom: 0.5rem; color: var(--clr-text-main);">Inventory Management using Particle Swarm Optimization</h2>
-            <p style="font-size: 1.1rem; font-weight: 600; color: var(--clr-accent-1); margin-bottom: 1rem;">"Decide when to ReOrder stock before running out"</p>
-            <p style="max-width: 800px; margin: 0 auto; color: var(--clr-subtext); font-size: 1rem; line-height: 1.6;">
-                This project demonstrates a hybrid approach to inventory control, using machine learning to forecast demand and Particle Swarm Optimization (PSO) to compute the ideal Reorder Point (ROP) and Economic Order Quantity (EOQ). Our goal is to balance holding and ordering costs while reliably preventing stockouts so that anyone reviewing the project can understand exactly what the optimizer graphs represent.
-            </p>
+        <section class="intro-pane panel-card" style="margin-bottom: 2.5rem; text-align: left;">
+            <h2 style="font-size: 1.8rem; margin-bottom: 1.5rem; color: var(--clr-text-main); text-align: center; border-bottom: 2px solid var(--clr-muted); padding-bottom: 0.5rem;">How Our Optimizer Works</h2>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; color: var(--clr-subtext); font-size: 0.95rem;">
+                <div>
+                    <h3 style="font-size: 1.1rem; color: var(--clr-accent-1); margin-bottom: 0.5rem;">Random Forest (RF)</h3>
+                    <p>We use a <strong>Random Forest Regressor</strong> to analyze historical sales data and accurately predict future demand over a 30-day horizon, capturing seasonal trends.</p>
+                </div>
+                <div>
+                    <h3 style="font-size: 1.1rem; color: var(--clr-accent-1); margin-bottom: 0.5rem;">Particle Swarm Opt. (PSO)</h3>
+                    <p>Inspired by the choreography of a bird flock, <strong>PSO</strong> iteratively discovers the optimal inventory levels by navigating a cost function landscape to minimize expenses.</p>
+                </div>
+                <div>
+                    <h3 style="font-size: 1.1rem; color: var(--clr-accent-1); margin-bottom: 0.5rem;">Economic Order Qty (EOQ)</h3>
+                    <p><strong>EOQ</strong> calculates the perfect quantity to order. It balances the risk of accumulating excess stock (holding cost) versus the expense of too many orders (ordering cost).</p>
+                </div>
+                <div>
+                    <h3 style="font-size: 1.1rem; color: var(--clr-accent-1); margin-bottom: 0.5rem;">Reorder Point (ROP)</h3>
+                    <p>The <strong>ROP</strong> tells you exactly <em>when</em> to reorder. It factors in your demand forecast and supplier lead time to prevent stockouts before they disrupt the business.</p>
+                </div>
+            </div>
         </section>
 
         <div class="dashboard-grid">
@@ -118,23 +133,36 @@
                 <!-- Charts -->
                 <div class="charts-stack">
                     <div class="chart-card panel-card">
-                        <h3>30-Day Demand Forecast</h3>
-                        <div class="canvas-wrapper">
-                            <canvas id="forecastChart"></canvas>
-                        </div>
-                    </div>
-                    
-                    <div class="chart-card panel-card">
                         <h3>PSO Convergence History</h3>
                         <div class="canvas-wrapper">
                             <canvas id="convergenceChart"></canvas>
                         </div>
                     </div>
+                    
+                    <div class="chart-card panel-card">
+                        <h3>30-Day Demand Forecast</h3>
+                        <div class="canvas-wrapper">
+                            <canvas id="forecastChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Optimization Summary -->
+                <div class="summary-card panel-card" style="margin-top: 2rem;">
+                    <h3>Optimization Summary</h3>
+                    <p id="optimization-summary" style="color: var(--clr-subtext); font-size: 1.1rem; line-height: 1.6; margin-top: 1rem;">
+                        Run the optimizer to see the results and recommended actions here.
+                    </p>
                 </div>
 
             </main>
         </div>
     </div>
+
+    <!-- Footer -->
+    <footer style="text-align: center; padding: 2rem; color: var(--clr-subtext); margin-top: 2rem; border-top: 1px solid var(--clr-muted);">
+        <p>Developed by students of MAC for DAA project</p>
+    </footer>
 
     <!-- Main Logic -->
     <script src="main.js"></script>

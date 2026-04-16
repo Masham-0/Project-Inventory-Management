@@ -43,7 +43,7 @@ def load_data():
 
 def get_product_list():
     """
-    Returns top 20 products by total aggregated quantity.
+    Returns top 20 products by total aggregated quantity with their descriptions.
     """
     script_dir = os.path.dirname(os.path.abspath(__file__))
     dataset_path = os.path.join(script_dir, 'dataset.csv')
@@ -51,16 +51,17 @@ def get_product_list():
     if not os.path.exists(dataset_path):
         raise FileNotFoundError(f"Dataset not found at {dataset_path}")
         
-    df = pd.read_csv(dataset_path, usecols=['StockCode', 'Quantity'])
+    df = pd.read_csv(dataset_path, usecols=['StockCode', 'Description', 'Quantity'])
     
-    # Filter negative quantities
+    # Filter negative quantities and empty descriptions
     df = df[df['Quantity'] > 0]
+    df = df.dropna(subset=['Description'])
     
-    # Aggregate total quantity per StockCode
-    total_quantity = df.groupby('StockCode')['Quantity'].sum().reset_index()
+    # Aggregate total quantity per StockCode and get first Description
+    grouped = df.groupby('StockCode').agg({'Quantity': 'sum', 'Description': 'first'}).reset_index()
     
     # Sort and get top 20
-    top_20 = total_quantity.sort_values(by='Quantity', ascending=False).head(20)
+    top_20 = grouped.sort_values(by='Quantity', ascending=False).head(20)
     
-    # return list of strings
-    return [str(code) for code in top_20['StockCode'].tolist()]
+    # return list of dicts
+    return [{"id": str(row['StockCode']), "name": str(row['Description']).strip().title()} for _, row in top_20.iterrows()]
