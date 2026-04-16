@@ -58,7 +58,7 @@ async function loadProducts() {
         const products = await response.json();
         
         // Clear select
-        productSelect.innerHTML = '';
+        productSelect.innerHTML = '<option value="" disabled selected>Select a Product...</option>';
         
         if (products.length === 0) {
             const opt = document.createElement('option');
@@ -71,7 +71,6 @@ async function loadProducts() {
             const opt = document.createElement('option');
             opt.value = product.id;
             opt.textContent = `${product.name} (Code: ${product.id})`;
-            if (index === 0) opt.selected = true;
             productSelect.appendChild(opt);
         });
     } catch (error) {

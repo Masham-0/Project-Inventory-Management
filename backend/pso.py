@@ -65,7 +65,8 @@ def run_pso(mean_demand, std_demand, lead_time_days, holding_cost, ordering_cost
         stockout_prob = max(0.0, z_approx) 
         
         # Costs
-        h_cost = holding_cost * (eoq / 2.0)
+        safety_stock = max(0.0, rop - expected_lead_time_demand)
+        h_cost = holding_cost * (eoq / 2.0 + safety_stock)
         o_cost = ordering_cost * (annual_demand / eoq)
         s_cost = stockout_cost * stockout_prob
         
